@@ -24,28 +24,27 @@ namespace KFA
         public static KFAController Instance { get; private set; }
 
         // ── Persistence key ──────────────────────────────────────────────────────
-        private const string ScenarioName = "KFAScenario";
 
         // ── Internal state ───────────────────────────────────────────────────────
-        public double LastBudgetUT          { get; private set; } = -1.0;
-        public int    ConsecutivePenaltyYears { get; private set; } = 0;
-        public bool   FrozenLastYear        { get; private set; } = false;
+        public double LastBudgetUT          { get; set; } = -1.0;
+        public int    ConsecutivePenaltyYears { get; set; } = 0;
+        public bool   FrozenLastYear        { get; set; } = false;
         private bool  initialized           = false;
 
         // ── Config (loaded from KerbalFundingAgency.cfg) ──────────────────────────────────
-        public double BaseAllocation          { get; private set; } = 150000.0;
-        public double MinRepMultiplier        { get; private set; } = 0.5;
-        public double MaxRepMultiplier        { get; private set; } = 2.0;
-        public double FacilityMultiplierBase  { get; private set; } = 1.0;
-        public double FacilityMultiplierMax   { get; private set; } = 2.5;
+        public double BaseAllocation          { get; set; } = 150000.0;
+        public double MinRepMultiplier        { get; set; } = 0.5;
+        public double MaxRepMultiplier        { get; set; } = 2.0;
+        public double FacilityMultiplierBase  { get; set; } = 1.0;
+        public double FacilityMultiplierMax   { get; set; } = 2.5;
 
         // Penalty config
-        public double RepPenaltyThreshold     { get; private set; } = 200.0;   // rep below this → penalty
-        public double PenaltyPerYear          { get; private set; } = 0.15;    // 15% cut per consecutive year
-        public double MaxPenaltyMultiplier    { get; private set; } = 0.6;     // floor: never below 40% cut
-        public int    PenaltyFreezeAfterYears { get; private set; } = 3;       // freeze after N years in a row
+        public double RepPenaltyThreshold     { get; set; } = 200.0;   // rep below this → penalty
+        public double PenaltyPerYear          { get; set; } = 0.15;    // 15% cut per consecutive year
+        public double MaxPenaltyMultiplier    { get; set; } = 0.6;     // floor: never below 40% cut
+        public int    PenaltyFreezeAfterYears { get; set; } = 3;       // freeze after N years in a row
 
-        public bool ShowBreakdown             { get; private set; } = true;
+        public bool ShowBreakdown             { get; set; } = true;
 
         // ── Lifecycle ────────────────────────────────────────────────────────────
 
@@ -56,16 +55,73 @@ namespace KFA
 
         private void Start()
         {
+            // Load cfg defaults first, then overlay any saved career data on top.
             LoadConfig();
-            GameEvents.onGameStateSaved.Add(OnSave);
-            GameEvents.onGameStateLoad.Add(OnLoad);
+            ApplyPendingScenarioData();
+        }
+
+        /// <summary>
+        /// Applies data cached by KFAScenario.OnLoad, which fires before
+        /// KFAController.Awake() sets Instance. Called from Start() once
+        /// Instance is ready and defaults are loaded.
+        /// </summary>
+        private void ApplyPendingScenarioData()
+        {
+            ConfigNode node = KFAScenario.PendingLoad;
+            if (node == null)
+            {
+                Debug.Log("[KFA] No pending scenario data — using cfg defaults.");
+                return;
+            }
+
+            string v;
+            v = node.GetValue("lastBudgetUT");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out double d)) LastBudgetUT = d;
+
+            v = node.GetValue("consecutivePenaltyYears");
+            if (!string.IsNullOrEmpty(v) && int.TryParse(v, out int ci)) ConsecutivePenaltyYears = ci;
+
+            v = node.GetValue("frozenLastYear");
+            if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out bool fl)) FrozenLastYear = fl;
+
+            double tmp;
+            v = node.GetValue("baseAllocation");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) BaseAllocation = tmp;
+
+            v = node.GetValue("minRepMultiplier");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) MinRepMultiplier = tmp;
+
+            v = node.GetValue("maxRepMultiplier");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) MaxRepMultiplier = tmp;
+
+            v = node.GetValue("facilityMultiplierBase");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) FacilityMultiplierBase = tmp;
+
+            v = node.GetValue("facilityMultiplierMax");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) FacilityMultiplierMax = tmp;
+
+            v = node.GetValue("repPenaltyThreshold");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) RepPenaltyThreshold = tmp;
+
+            v = node.GetValue("penaltyPerYear");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) PenaltyPerYear = tmp;
+
+            v = node.GetValue("maxPenaltyMultiplier");
+            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out tmp)) MaxPenaltyMultiplier = tmp;
+
+            v = node.GetValue("penaltyFreezeAfterYears");
+            if (!string.IsNullOrEmpty(v) && int.TryParse(v, out int fi)) PenaltyFreezeAfterYears = fi;
+
+            v = node.GetValue("showBreakdown");
+            if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out bool sb)) ShowBreakdown = sb;
+
+            Debug.Log($"[KFA] Pending scenario data applied. Base={BaseAllocation:N0}, " +
+                      $"UT={LastBudgetUT:F0}, PenaltyYears={ConsecutivePenaltyYears}");
         }
 
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
-            GameEvents.onGameStateSaved.Remove(OnSave);
-            GameEvents.onGameStateLoad.Remove(OnLoad);
         }
 
         private void Update()
@@ -318,7 +374,7 @@ namespace KFA
 
         /// <summary>
         /// Called by BudgetUI to push edited values into the live controller.
-        /// Changes take effect immediately; call SaveConfig() to persist to disk.
+        /// Changes take effect immediately. Settings are saved with the career save file.
         /// </summary>
         public void ApplySettings(
             double baseAlloc, double minRep, double maxRep,
@@ -340,67 +396,40 @@ namespace KFA
             Debug.Log($"[KFA] Settings applied in-game. Base={BaseAllocation:N0}");
         }
 
-        /// <summary>
-        /// Writes current in-memory settings back to KerbalFundingAgency.cfg on disk.
-        /// Returns true on success.
-        /// </summary>
-        public bool SaveConfig()
-        {
-            try
-            {
-                // Find the cfg file path via GameDatabase so we use the correct GameData location
-                UrlDir.UrlConfig[] configs = GameDatabase.Instance.GetConfigs("KFA_SETTINGS");
-                if (configs == null || configs.Length == 0)
-                {
-                    Debug.LogError("[KFA] SaveConfig: Could not find KFA_SETTINGS in GameDatabase.");
-                    return false;
-                }
-
-                string cfgPath = configs[0].url;
-                // configs[0].url is a GameData-relative path without extension,
-                // e.g. "KerbalFundingAgency/KerbalFundingAgency". Resolve to absolute path.
-                string fullPath = System.IO.Path.Combine(
-                    KSPUtil.ApplicationRootPath, "GameData", cfgPath + ".cfg");
-
-                string contents =
-                    "// Kerbal Funding Agency – Government Budget Allocation Settings\n" +
-                    "// Auto-saved from in-game settings panel.\n\n" +
-                    "KFA_SETTINGS\n{\n" +
-                    $"    baseAllocation         = {BaseAllocation:F0}\n" +
-                    $"    minRepMultiplier       = {MinRepMultiplier:F2}\n" +
-                    $"    maxRepMultiplier       = {MaxRepMultiplier:F2}\n" +
-                    $"    facilityMultiplierBase = {FacilityMultiplierBase:F2}\n" +
-                    $"    facilityMultiplierMax  = {FacilityMultiplierMax:F2}\n" +
-                    $"    repPenaltyThreshold    = {RepPenaltyThreshold:F0}\n" +
-                    $"    penaltyPerYear         = {PenaltyPerYear:F2}\n" +
-                    $"    maxPenaltyMultiplier   = {MaxPenaltyMultiplier:F2}\n" +
-                    $"    penaltyFreezeAfterYears = {PenaltyFreezeAfterYears}\n" +
-                    $"    showBreakdown          = {ShowBreakdown.ToString().ToLower()}\n" +
-                    "}\n";
-
-                System.IO.File.WriteAllText(fullPath, contents);
-                Debug.Log($"[KFA] Config saved to {fullPath}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[KFA] SaveConfig failed: {e.Message}");
-                return false;
-            }
-        }
 
         // ── Config loading ───────────────────────────────────────────────────────
 
         private void LoadConfig()
         {
-            UrlDir.UrlConfig[] configs = GameDatabase.Instance.GetConfigs("KFA_SETTINGS");
-            if (configs == null || configs.Length == 0)
+            // Read directly from disk so saved settings are picked up after
+            // every game reload, not just on first KSP launch.
+            // GameDatabase caches cfg files at startup and never rescans,
+            // so any settings saved in-game would be lost on reload if we used it.
+            string fullPath = System.IO.Path.Combine(
+                KSPUtil.ApplicationRootPath,
+                "GameData",
+                "KerbalFundingAgency",
+                "KerbalFundingAgency.cfg");
+
+            if (!System.IO.File.Exists(fullPath))
             {
-                Debug.LogWarning("[KFA] No config found – using defaults.");
+                Debug.LogWarning($"[KFA] Config file not found at {fullPath} – using defaults.");
                 return;
             }
 
-            ConfigNode node = configs[0].config;
+            ConfigNode root = ConfigNode.Load(fullPath);
+            if (root == null)
+            {
+                Debug.LogWarning("[KFA] Failed to parse config file – using defaults.");
+                return;
+            }
+
+            ConfigNode node = root.GetNode("KFA_SETTINGS");
+            if (node == null)
+            {
+                Debug.LogWarning("[KFA] KFA_SETTINGS node not found in config – using defaults.");
+                return;
+            }
 
             double tmp;
             if (TryParseDouble(node, "baseAllocation",          out tmp)) BaseAllocation         = tmp;
@@ -419,7 +448,7 @@ namespace KFA
             v = node.GetValue("showBreakdown");
             if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out bool btmp)) ShowBreakdown = btmp;
 
-            Debug.Log($"[KFA] Config loaded. Base={BaseAllocation:N0}, " +
+            Debug.Log($"[KFA] Config loaded from disk. Base={BaseAllocation:N0}, " +
                       $"PenaltyThreshold={RepPenaltyThreshold}, FreezeAfter={PenaltyFreezeAfterYears}yr");
         }
 
@@ -432,27 +461,56 @@ namespace KFA
 
         // ── Persistence ──────────────────────────────────────────────────────────
 
-        private void OnSave(Game game)
+    }
+
+    // ── ScenarioModule ────────────────────────────────────────────────────────
+    // KSP's ScenarioModule system guarantees OnSave/OnLoad fire at the correct
+    // point in the save/load cycle. This is the standard KSP pattern for
+    // persisting mod data inside career saves.
+
+    [KSPScenario(
+        ScenarioCreationOptions.AddToExistingCareerGames |
+        ScenarioCreationOptions.AddToNewCareerGames,
+        GameScenes.FLIGHT, GameScenes.SPACECENTER)]
+    public class KFAScenario : ScenarioModule
+    {
+        // Cache the loaded node so KFAController can pull from it once ready.
+        // OnLoad fires before KFAController.Awake() sets Instance, so we store
+        // the data here and apply it when the controller calls ApplyLoadedData().
+        public static ConfigNode PendingLoad { get; private set; } = null;
+
+        public override void OnSave(ConfigNode node)
         {
-            ConfigNode s = game.config.AddNode(ScenarioName);
-            s.AddValue("lastBudgetUT",            LastBudgetUT.ToString("R"));
-            s.AddValue("consecutivePenaltyYears", ConsecutivePenaltyYears.ToString());
-            s.AddValue("frozenLastYear",          FrozenLastYear.ToString());
+            KFAController bc = KFAController.Instance;
+            if (bc == null) { Debug.LogWarning("[KFA] OnSave: KFAController not found."); return; }
+
+            // Budget state
+            node.AddValue("lastBudgetUT",            bc.LastBudgetUT.ToString("R"));
+            node.AddValue("consecutivePenaltyYears", bc.ConsecutivePenaltyYears.ToString());
+            node.AddValue("frozenLastYear",          bc.FrozenLastYear.ToString());
+
+            // Settings
+            node.AddValue("baseAllocation",          bc.BaseAllocation.ToString("R"));
+            node.AddValue("minRepMultiplier",        bc.MinRepMultiplier.ToString("R"));
+            node.AddValue("maxRepMultiplier",        bc.MaxRepMultiplier.ToString("R"));
+            node.AddValue("facilityMultiplierBase",  bc.FacilityMultiplierBase.ToString("R"));
+            node.AddValue("facilityMultiplierMax",   bc.FacilityMultiplierMax.ToString("R"));
+            node.AddValue("repPenaltyThreshold",     bc.RepPenaltyThreshold.ToString("R"));
+            node.AddValue("penaltyPerYear",          bc.PenaltyPerYear.ToString("R"));
+            node.AddValue("maxPenaltyMultiplier",    bc.MaxPenaltyMultiplier.ToString("R"));
+            node.AddValue("penaltyFreezeAfterYears", bc.PenaltyFreezeAfterYears.ToString());
+            node.AddValue("showBreakdown",           bc.ShowBreakdown.ToString());
+
+            Debug.Log($"[KFA] Scenario saved. Base={bc.BaseAllocation:N0}, UT={bc.LastBudgetUT:F0}");
         }
 
-        private void OnLoad(ConfigNode gameNode)
+        public override void OnLoad(ConfigNode node)
         {
-            ConfigNode s = gameNode.GetNode(ScenarioName);
-            if (s == null) return;
-
-            string v = s.GetValue("lastBudgetUT");
-            if (!string.IsNullOrEmpty(v) && double.TryParse(v, out double d)) LastBudgetUT = d;
-
-            v = s.GetValue("consecutivePenaltyYears");
-            if (!string.IsNullOrEmpty(v) && int.TryParse(v, out int i)) ConsecutivePenaltyYears = i;
-
-            v = s.GetValue("frozenLastYear");
-            if (!string.IsNullOrEmpty(v) && bool.TryParse(v, out bool b)) FrozenLastYear = b;
+            // Store the node — KFAController will apply it in Start() once
+            // its Instance is set and LoadConfig() has run.
+            PendingLoad = node;
+            Debug.Log("[KFA] Scenario node cached for deferred load.");
         }
     }
-}
+
+} // end namespace KFA

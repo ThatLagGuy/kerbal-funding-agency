@@ -348,14 +348,29 @@ namespace KFA
                 ApplySettingsToController();
             }
 
-            if (GUILayout.Button("Save to cfg", HighLogic.Skin.button))
+            if (GUILayout.Button("Save to career", HighLogic.Skin.button))
             {
                 if (sBaseAllocationValid)
                 {
                     ApplySettingsToController();
-                    bool ok = KFAController.Instance?.SaveConfig() ?? false;
-                    sSaveStatus   = ok ? "Saved to KerbalFundingAgency.cfg!" : "Save failed – check KSP.log";
-                    sSaveStatusTime = Time.realtimeSinceStartup;
+                    // Trigger KSP's save system to write the current game state,
+                    // which includes our settings via OnSave()
+                    if (HighLogic.CurrentGame != null)
+                    {
+                        GamePersistence.SaveGame(
+                            HighLogic.CurrentGame,
+                            HighLogic.CurrentGame.Title,
+                            HighLogic.SaveFolder,
+                            SaveMode.OVERWRITE);
+                        sSaveStatus     = "Saved to career!";
+                        sSaveStatusTime = Time.realtimeSinceStartup;
+                        Debug.Log("[KFA] Career save triggered from settings panel.");
+                    }
+                    else
+                    {
+                        sSaveStatus     = "No active career save found.";
+                        sSaveStatusTime = Time.realtimeSinceStartup;
+                    }
                 }
             }
 
@@ -371,7 +386,7 @@ namespace KFA
 
             GUILayout.Space(4f);
             GUILayout.Label("Changes apply immediately in-game.\n" +
-                            "\"Save to cfg\" persists settings across restarts.",
+                            "\"Save to career\" writes settings to your save file.",
                             styleSmall);
 
             GUILayout.Space(4f);

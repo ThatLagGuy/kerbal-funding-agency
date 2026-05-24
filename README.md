@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://github.com/ThatLagGuy/kerbal-funding-agency/blob/main/Gamedata/KerbalFundingAgency/Textures/banner.png" alt="Kerbal Funding Agency" width="800"/>
+  <img src="https://raw.githubusercontent.com/ThatLagGuy/kerbal-funding-agency/main/GameData/KerbalFundingAgency/Textures/banner.png" alt="Kerbal Funding Agency" width="800"/>
 </p>
 
 <p align="center">
   <a href="https://github.com/ThatLagGuy/kerbal-funding-agency/releases/latest">
     <img src="https://img.shields.io/github/v/release/ThatLagGuy/kerbal-funding-agency?style=for-the-badge&logo=github&label=Download&color=4c91e6" alt="Latest Release"/>
   </a>
-  <a href="https://spacedock.info/mod/4281/Kerbal%20Funding%20Agency#info">
+  <a href="https://spacedock.info">
     <img src="https://img.shields.io/badge/SpaceDock-Download-orange?style=for-the-badge" alt="SpaceDock"/>
   </a>
   <img src="https://img.shields.io/badge/KSP-1.12.x-94c1ff?style=for-the-badge" alt="KSP Version"/>
@@ -36,10 +36,6 @@ budget = base allocation × reputation multiplier × facility multiplier × pena
 ```
 
 A detailed breakdown is posted to your KSP message log each year.
-
-<p align="center">
-  <img src="https://i.imgur.com/YxoiZjG.png"/>
-</p>
 
 ### ⭐ Reputation Scaling
 Your reputation directly influences your funding. A brand new agency scraping by at zero rep gets half the base allocation. A legendary agency with maxed reputation gets double. Everything scales linearly between the two.

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\KerbalFundingAgency.csproj": {}
+    "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Main\\source\\KerbalFundingAgency.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\KerbalFundingAgency.csproj": {
+    "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Main\\source\\KerbalFundingAgency.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\KerbalFundingAgency.csproj",
+        "projectUniqueName": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Main\\source\\KerbalFundingAgency.csproj",
         "projectName": "KerbalFundingAgency",
-        "projectPath": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\KerbalFundingAgency.csproj",
+        "projectPath": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Main\\source\\KerbalFundingAgency.csproj",
         "packagesPath": "C:\\Users\\Mihoy Minoy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\obj\\",
+        "outputPath": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Main\\source\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Mihoy Minoy\\AppData\\Roaming\\NuGet\\NuGet.Config"
