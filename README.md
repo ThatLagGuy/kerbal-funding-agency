@@ -6,7 +6,7 @@
   <a href="https://github.com/ThatLagGuy/kerbal-funding-agency/releases/latest">
     <img src="https://img.shields.io/github/v/release/ThatLagGuy/kerbal-funding-agency?style=for-the-badge&logo=github&label=Download&color=4c91e6" alt="Latest Release"/>
   </a>
-  <a href="https://spacedock.info">
+  <a href="https://spacedock.info/mod/4281/Kerbal%20Funding%20Agency#info">
     <img src="https://img.shields.io/badge/SpaceDock-Download-orange?style=for-the-badge" alt="SpaceDock"/>
   </a>
   <img src="https://img.shields.io/badge/KSP-1.12.x-94c1ff?style=for-the-badge" alt="KSP Version"/>
