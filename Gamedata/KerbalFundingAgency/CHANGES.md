@@ -1,7 +1,34 @@
 # Changelog
 
-All notable changes to BudgetMod will be documented here.
+All notable changes to Kerbal Funding Agency will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [0.3.2] – 2026-05-24
+
+### Changed
+- Settings are now saved to the career save file instead of KerbalFundingAgency.cfg.
+  The cfg file is now a read-only defaults template — it is never overwritten by the mod.
+  This means different career saves can have different KFA settings independently.
+- "Save to cfg" button in the settings panel renamed to "Save to career".
+
+### Fixed
+- Settings now correctly persist across save reloads. Previously the cfg write
+  approach was unreliable; settings now live in the save file alongside budget
+  state and are loaded correctly every time the save is opened.
+
+---
+
+## [0.3.1] – 2026-05-24
+
+### Fixed
+- Save to cfg now correctly resolves the config file path on all systems. Previously
+  the GameDatabase URL lookup produced a doubled folder path, causing the save to
+  fail with a file-not-found error.
+- Settings saved in-game now correctly persist across save reloads. Previously
+  LoadConfig read from GameDatabase which is only populated at KSP startup, so
+  any in-game changes were lost on reload. LoadConfig now reads directly from disk.
 
 ---
 
