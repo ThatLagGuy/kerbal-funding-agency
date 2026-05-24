@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "d3XwfElRsus=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Mihoy Minoy\\OneDrive\\Desktop\\KSP Budget Mod\\Dev\\KerbalFundingAgency.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Mihoy Minoy\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\Mihoy Minoy\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net45\\1.0.3\\microsoft.netframework.referenceassemblies.net45.1.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

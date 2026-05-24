@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <AssemblyName>KerbalFundingAgency</AssemblyName>
+    <RootNamespace>KFA</RootNamespace>
+    <Optimize>true</Optimize>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!--
+    Point KSPRoot at your KSP installation folder, or set the KSP_ROOT
+    environment variable so you don't have to edit this file per machine.
+  -->
+  <PropertyGroup>
+    <KSPRoot Condition="'$(KSPRoot)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</KSPRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(KSPRoot)\KSP_x64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Auto-copy DLL to GameData after build -->
+  <Target Name="CopyToGameData" AfterTargets="Build">
+    <Copy
+      SourceFiles="$(OutputPath)$(AssemblyName).dll"
+      DestinationFolder="$(KSPRoot)\GameData\KerbalFundingAgency\Plugins"
+      SkipUnchangedFiles="true"
+    />
+  </Target>
+
+</Project>
