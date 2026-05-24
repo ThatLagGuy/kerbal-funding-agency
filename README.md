@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ThatLagGuy/kerbal-funding-agency/tree/main/Textures/banner.png" alt="Kerbal Funding Agency" width="800"/>
+  <img src="https://github.com/ThatLagGuy/kerbal-funding-agency/blob/main/Textures/banner.png?raw=true" width="800"/>
 </p>
 
 <p align="center">
