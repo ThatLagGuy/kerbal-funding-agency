@@ -1,54 +1,82 @@
-# Kerbal Funding Agency (KFA)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ThatLagGuy/kerbal-funding-agency/main/GameData/KerbalFundingAgency/Textures/banner.png" alt="Kerbal Funding Agency" width="800"/>
+</p>
 
-A career mode mod for Kerbal Space Program that adds a realistic government budget system to your space agency. Every in-game year, your agency receives an annual funding allocation from the government — scaled by your reputation and the quality of your KSC facilities. Keep your reputation high, invest in your space center, and the money follows. Let things slip and face the consequences.
+<p align="center">
+  <a href="https://github.com/ThatLagGuy/kerbal-funding-agency/releases/latest">
+    <img src="https://img.shields.io/github/v/release/ThatLagGuy/kerbal-funding-agency?style=for-the-badge&logo=github&label=Download&color=4c91e6" alt="Latest Release"/>
+  </a>
+  <a href="https://spacedock.info">
+    <img src="https://img.shields.io/badge/SpaceDock-Download-orange?style=for-the-badge" alt="SpaceDock"/>
+  </a>
+  <img src="https://img.shields.io/badge/KSP-1.12.x-94c1ff?style=for-the-badge" alt="KSP Version"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License"/>
+  <img src="https://img.shields.io/badge/RSS-Compatible-blue?style=for-the-badge" alt="RSS Compatible"/>
+</p>
+
+<p align="center">
+  <i>Government funding for your space program — with all the bureaucracy that implies.</i>
+</p>
+
+---
+
+## What is KFA?
+
+**Kerbal Funding Agency** adds a realistic government budget system to KSP career mode. Every in-game year your agency receives an annual funding allocation — scaled by your reputation and the quality of your KSC facilities. Keep your reputation high, invest in your space center, and the funding follows. Let things slip and face escalating budget cuts, or worse, a full government funding freeze.
 
 ---
 
 ## Features
 
-### Annual Budget Allocation
-Every year your agency receives a government budget deposit calculated as:
+### 💰 Annual Budget Allocation
+Every year the government deposits a budget into your agency funds, calculated as:
 
-> `budget = base allocation × reputation multiplier × facility multiplier × penalty multiplier`
+```
+budget = base allocation × reputation multiplier × facility multiplier × penalty multiplier
+```
 
-A detailed breakdown is posted to your message log each year showing exactly how the figure was reached.
+A detailed breakdown is posted to your KSP message log each year.
 
-### Reputation Scaling
-Your reputation directly influences your funding. An agency with no reputation receives half the base allocation. A legendary agency with maxed reputation receives double. Everything scales linearly in between.
+### ⭐ Reputation Scaling
+Your reputation directly influences your funding. A brand new agency scraping by at zero rep gets half the base allocation. A legendary agency with maxed reputation gets double. Everything scales linearly between the two.
 
-### Facility Multiplier
-The government rewards investment in your space center. Upgrading your VAB, R&D facility, Administration building, and Launch Pad all contribute to a higher facility multiplier — up to 2.5× with a fully upgraded KSC.
+### 🏗️ Facility Multiplier
+The government rewards investment in your space center. Upgrading your **VAB**, **R&D facility**, **Administration building**, and **Launch Pad** all contribute to a higher budget — up to **2.5×** with a fully upgraded KSC.
 
-### Reputation Penalty System
-Sustained poor reputation has real consequences. If your reputation drops below the configurable threshold:
+### ⚠️ Reputation Penalty System
+Sustained poor reputation has real consequences:
 
-- **Year 1** below threshold → 15% budget cut
-- **Year 2** below threshold → 30% budget cut
-- **Year 3+** below threshold → funding frozen entirely for that year
+| Consecutive years below threshold | Effect |
+|---|---|
+| 1 year | 15% budget cut |
+| 2 years | 30% budget cut |
+| 3+ years | ❌ Funding frozen entirely |
 
 Recover your reputation above the threshold at any point to reset the streak.
 
-### In-Game Settings Panel
-A toolbar button in the AppLauncher (Space Center and Flight scenes) opens a window with two tabs:
+### 🖥️ In-Game Settings Panel
+Click the KFA button in the AppLauncher toolbar to open the budget window:
 
-- **Overview** — countdown to next deposit, full multiplier breakdown with projected total, reputation status and penalty streak, facility level indicators
-- **Settings** — sliders for every tunable value with live preview, applies changes immediately, with a Save button that writes back to the config file
+- **Overview tab** — countdown to next deposit, projected budget with full multiplier breakdown, reputation status, penalty streak, and facility level indicators
+- **Settings tab** — sliders for every tunable value, changes apply immediately in-game, with a Save button that writes back to the config file
 
-### RSS / Planet Pack Compatible
-Year length is read directly from the home body's orbital period, so KFA automatically uses the correct year length for any planet pack — no configuration needed.
+### 🌍 RSS & Planet Pack Compatible
+Year length is read directly from the home body's orbital period — no configuration needed.
 
-| Install | Year length |
+| Installation | Year length used |
 |---|---|
 | Stock KSP | ~426 Kerbin days |
 | RSS | 365.25 Earth days |
-| JNSQ, GPP, OPM | Home body orbital period |
+| JNSQ / GPP / OPM | Home body orbital period |
 
 ---
 
 ## Installation
 
-1. Download the latest release zip from [SpaceDock](#) or [GitHub Releases](#)
-2. Extract into your `GameData` folder:
+> **Requires:** KSP 1.12.x
+
+1. Download the latest release from [GitHub Releases](https://github.com/ThatLagGuy/kerbal-funding-agency/releases/latest) or [SpaceDock](#)
+2. Extract the zip into your `GameData` folder:
 
 ```
 GameData/
@@ -60,13 +88,13 @@ GameData/
       KerbalFundingAgency.dll
 ```
 
-3. Launch KSP and load a career save
+3. Launch KSP and load a career save — that's it!
 
 ---
 
 ## Configuration
 
-All values can be adjusted in `GameData/KerbalFundingAgency/KerbalFundingAgency.cfg` or via the in-game Settings tab.
+All values can be tuned in `KerbalFundingAgency.cfg` or directly via the **in-game Settings tab** without editing any files.
 
 | Setting | Default | Description |
 |---|---|---|
@@ -76,16 +104,16 @@ All values can be adjusted in `GameData/KerbalFundingAgency/KerbalFundingAgency.
 | `facilityMultiplierBase` | 1.0 | Multiplier with all KSC buildings at level 0 |
 | `facilityMultiplierMax` | 2.5 | Multiplier with all KSC buildings fully upgraded |
 | `repPenaltyThreshold` | 200 | Reputation below this triggers budget penalties |
-| `penaltyPerYear` | 0.15 | Fractional budget cut per consecutive penalty year |
-| `penaltyFreezeAfterYears` | 3 | Consecutive penalty years before full funding freeze |
+| `penaltyPerYear` | 0.15 | Budget cut per consecutive penalty year |
+| `penaltyFreezeAfterYears` | 3 | Years of low rep before full funding freeze |
 | `showBreakdown` | true | Show annual budget breakdown in the message log |
 
-### Suggested base allocation presets
+### Presets
 
-| Career difficulty | Base allocation |
+| Difficulty | Suggested `baseAllocation` |
 |---|---|
 | Easy | 300,000 |
-| Normal | 150,000 |
+| Normal (default) | 150,000 |
 | Hard | 75,000 |
 | RP-1 / RSS | 1,500,000 |
 
@@ -93,13 +121,32 @@ All values can be adjusted in `GameData/KerbalFundingAgency/KerbalFundingAgency.
 
 ## Compatibility
 
-- Career mode only — does nothing in Sandbox or Science mode
-- KSP 1.12.x
-- Compatible with RSS, JNSQ, GPP, OPM and any other planet pack
-- Compatible with Contract Configurator, Strategia, and RP-1
+| Mod | Status |
+|---|---|
+| Stock KSP 1.12.x | ✅ Fully supported |
+| RSS | ✅ Fully compatible |
+| JNSQ / GPP / OPM | ✅ Fully compatible |
+| Contract Configurator | ✅ Compatible |
+| Strategia | ✅ Compatible |
+| RP-1 | ✅ Compatible (increase base allocation) |
+| Sandbox / Science mode | ➖ Inactive — career only |
+
+---
+
+## Changelog
+
+See [CHANGES.md](CHANGES.md) for the full version history.
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+Distributed under the **MIT License** — see [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+  Made with 💚 for the KSP community &nbsp;•&nbsp;
+  <a href="https://github.com/ThatLagGuy/kerbal-funding-agency/issues">Report a Bug</a> &nbsp;•&nbsp;
+  <a href="https://github.com/ThatLagGuy/kerbal-funding-agency/issues">Request a Feature</a>
+</p>
