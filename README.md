@@ -37,6 +37,10 @@ budget = base allocation × reputation multiplier × facility multiplier × pena
 
 A detailed breakdown is posted to your KSP message log each year.
 
+<p align="center">
+  <img src="https://i.imgur.com/YxoiZjG.png"/>
+</p>
+
 ### ⭐ Reputation Scaling
 Your reputation directly influences your funding. A brand new agency scraping by at zero rep gets half the base allocation. A legendary agency with maxed reputation gets double. Everything scales linearly between the two.
 
